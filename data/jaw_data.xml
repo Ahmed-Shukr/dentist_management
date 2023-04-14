@@ -189,11 +189,11 @@
 
         <!--===========================================================================-->
 
-        <record id="teeth_data_product" model="product.template">
-            <field name="name">Teeth</field>
-            <field name="medical_product_type">dentist</field>
-            <field name="detailed_type">product</field>
-            <field name="categ_id" ref="dentist_management.dentist_product_category"/>
-        </record>
+<!--        <record id="teeth_data_product" model="product.template">-->
+<!--            <field name="name">Teeth</field>-->
+<!--            <field name="medical_product_type">dentist</field>-->
+<!--            <field name="detailed_type">product</field>-->
+<!--            <field name="categ_id" ref="dentist_management.dentist_product_category"/>-->
+<!--        </record>-->
     </data>
 </odoo>
