@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="installments_payment_wizard_view" model="ir.ui.view">
+        <field name="name">installments.payment.wizard.view</field>
+        <field name="model">installments.payment</field>
+        <field name="arch" type="xml">
+            <form string="Installments of Invoices">
+                <group>
+                    <group>
+                        <field name="number_of_invoices" required="1"/>
+                    </group>
+                </group>
+                <footer>
+                    <button name="create_installments" string="Create"
+                            type="object" class="oe_highlight"/>
+                    <button string="Cancel" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_installments_payment_wizard_view" model="ir.actions.act_window">
+        <field name="name">Installments Process</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">installments.payment</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="installments_payment_wizard_view"/>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

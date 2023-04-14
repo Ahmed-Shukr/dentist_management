@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="dental_measurement_lines_form_view" model="ir.ui.view">
+            <field name="name">dental_measurement_lines_form</field>
+            <field name="model">dental.measurement.lines</field>
+            <field name="arch" type="xml">
+                <form string="Dental Measurement Lines Form">
+                    <header>
+
+                        <button name="done_measurement" string="Measurements Taken" type="object" class="oe_highlight"
+                                attrs="{'invisible': [('state', '!=', 'pending')]}"/>
+
+                        <field name="state" widget="statusbar"/>
+
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <label for="patient_name"/>
+                            <h1>
+                                <field name="patient_name" readonly="1" force_save="1"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="patient_id" readonly="1" force_save="1"/>
+                                <field name="patient_contact" required="1"/>
+                                <field name="selection_jaw" string="Select Jaw" invisible="1"/>
+                                <field name="jaw_data_ids" widget="many2many_tags"
+                                       options="{'no_edit': True, 'no_create': True, 'no_open': True}"
+                                       string="Select Jaw"
+                                />
+                            </group>
+                            <group>
+                                <field name="start_date" readonly="1"/>
+                                <field name="insertion_date"/>
+                                <field name="measure_data_ids" widget="many2many_tags"
+                                       options="{'no_edit': True, 'no_create': True, 'no_open': True}"
+                                       string="Select Tooth"
+                                />
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="dental_measurement_lines_tree_view" model="ir.ui.view">
+            <field name="name">Dental Measurements</field>
+            <field name="model">dental.measurement.lines</field>
+            <field name="arch" type="xml">
+                <tree string="Dental Measurement Lines Tree">
+                    <field name="patient_id"/>
+                    <field name="patient_name" string="Patient Name"/>
+                    <field name="dental_measurement_id" string="Appointment ID"/>
+                    <field name="start_date"/>
+                    <field name="insertion_date"/>
+                    <field name="patient_contact"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="dental_measurement_lines_act_window" model="ir.actions.act_window">
+            <field name="name">Dental Measurements</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">dental.measurement.lines</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem name="Dentist Measurements" id="dental_measurement_lines_menu"
+                  parent="dentist_management.root_main_menu_dentist"
+                  action="dental_measurement_lines_act_window"
+                  groups="base.group_erp_manager,healthcare_management.group_doctor,dentist_management.group_dental_receptionist"/>
+
+
+        <record id="dental_measurement_lines_pending" model="ir.actions.act_window">
+            <field name="name">Pending Measurements</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">dental.measurement.lines</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('state','=','pending')]</field>
+        </record>
+
+        <menuitem name="Pending Measurements" id="pending_dental_measurement_lines_menu"
+                  parent="dentist_management.root_main_menu_dentist"
+                  action="dental_measurement_lines_pending"
+                  groups="base.group_erp_manager,healthcare_management.group_doctor,dentist_management.group_dental_receptionist"/>
+
+
+        <record id="dental_measurement_lines_done" model="ir.actions.act_window">
+            <field name="name">Done Measurements</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">dental.measurement.lines</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('state','=','done')]</field>
+        </record>
+
+        <menuitem name="Done Measurements" id="done_dental_measurement_lines_menu"
+                  parent="dentist_management.root_main_menu_dentist"
+                  action="dental_measurement_lines_done"
+                  groups="base.group_erp_manager,healthcare_management.group_doctor,dentist_management.group_dental_receptionist"/>
+
+    </data>
+</odoo>

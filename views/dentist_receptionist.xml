@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="dentist_receptionist_form_view" model="ir.ui.view">
+        <field name="name">dentist_receptionist_form_view</field>
+        <field name="model">dentist.receptionist</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_confirm_apt" string="Confirm" type="object" class="oe_highlight"
+                            attrs="{'invisible':[('state', '!=', 'new')]}"/>
+                    <field name="state" widget="statusbar" statusbar_visible="new,confirm,unpaid,paid,checked"/>
+
+                    <button
+                            name="create_invoice"
+                            string="Create Invoice" type="object" class="oe_highlight"
+                            groups="dentist_management.group_dental_receptionist"
+                            attrs="{'invisible': ['|', '|',('is_appointment_started', '!=', True), ('is_dental_services', '!=', True),('state', '!=', 'confirm')]}"
+                    />
+
+                    <button name="create_paid_invoice" string="Register Payment" type="object" class="oe_highlight"
+                            groups="dentist_management.group_dental_receptionist"
+                            attrs="{'invisible': ['|', '|',('is_appointment_started', '!=', True), ('is_dental_services', '!=', True), ('state', 'not in', ['confirm', 'unpaid'])]}"
+                    />
+
+                    <button
+                            name="%(dentist_management.action_installments_payment_wizard_view)d"
+                            string="Installments" type="action" class="oe_highlight"
+                            groups="dentist_management.group_dental_receptionist"
+                            attrs="{'invisible':['|', ('installments_payment', '=', False), ('installment_check', '=', True)]}"
+                    />
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button" name="action_open_dentist" string="Dentist" type="object"
+                                icon="fa-book"
+                                attrs="{'invisible':[('state', 'not in', ['confirm', 'checked'])]}"/>
+                        <button class="oe_stat_button" name="display_invoice" type="object"
+                                icon="fa-book"
+                                attrs="{'invisible':[('display_smart', '=', False)]}">
+                            <field name="invoices_count" widget="statinfo"/>
+                        </button>
+                        <button class="oe_stat_button" name="installments_button" string="Invoice" type="object"
+                                icon="fa-book"
+                                attrs="{'invisible':[('installment_check', '=', False)]}"/>
+                    </div>
+                    <h1>
+                        <field name="seq_number"/>
+                    </h1>
+                    <div>
+                        <group>
+                            <group>
+                                <field name="appointments_id" string="Appointment"
+                                       domain="[('speciality_id.speciality_service_id.name', '=', 'Dentist'), ('invoices_state', 'in', ['paid', 'pay_later', 'appointment_start'])]"
+                                       options="{'no_create':1,'no_create_edit':1}"/>
+                                <field name="patient_name" string="Patient Name"/>
+                                <field name="validity_status" string="Status"/>
+                            </group>
+                            <group>
+                                <field name="appointment_date" string="Appointment Date"/>
+                                <field name="patient_status" string="Patient Status"/>
+                                <field name="single_payment" string="Single Payment"
+                                       attrs="{'invisible':['|', ('appointment_state', '=', False), ('installments_payment', '!=', False)]}"/>
+                                <field name="installments_payment" string="Installment Payment"
+                                       attrs="{'invisible':['|', ('appointment_state', '=', False), ('single_payment', '!=', False)]}"/>
+                                <field name="display_smart" invisible="1"/>
+                                <field name="installment_check" invisible="1"/>
+                                <field name="appointment_state" invisible="1"/>
+                                <field name="is_appointment_started" invisible="1"/>
+                                <field name="is_dental_services" invisible="1"/>
+                            </group>
+                            <br/>
+                            <group>
+                                <field name="dental_chair" string="Dental Chair" required="1"/>
+                                <field name="account_move_id" invisible="1"/>
+                            </group>
+                        </group>
+                    </div>
+                    <notebook invisible="1">
+                        <page name="prescription" string="Prescription">
+                            <field name="prescription" readonly="1"/>
+                        </page>
+                        <page name="lab_test" string="Lab Tests">
+                            <field name="lab_tests" readonly="1"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="dentist_receptionist_tree_view" model="ir.ui.view">
+        <field name="name">dentist_receptionist_tree_view</field>
+        <field name="model">dentist.receptionist</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="appointments_id"/>
+                <field name="patient_name"/>
+                <field name="patient_status"/>
+                <field name="appointment_date"/>
+                <field name="validity_status"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="sequence_dentist_receptionist" model="ir.sequence">
+        <field name="name">sequence_dentist_receptionist</field>
+        <field name="code">dentist.receptionist</field>
+        <field name="active">TRUE</field>
+        <field name="prefix">DAPT</field>
+        <field name="padding">3</field>
+        <field name="number_next">1</field>
+        <field name="number_increment">1</field>
+    </record>
+
+    <record id="dentist_receptionist_action" model="ir.actions.act_window">
+        <field name="name">Dentist Receptionist</field>
+        <field name="res_model">dentist.receptionist</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="dentist_management.root_main_menu_dentist"
+              name="Dentist"
+              parent="healthcare_management.main_menu_healthcare_management"
+              sequence="10"
+              groups="base.group_erp_manager,healthcare_management.group_doctor,dentist_management.group_dental_receptionist"/>
+
+
+    <menuitem id="dentist_management.dentist_receptionist_menu" name="Dentist Receptionist"
+              groups="base.group_erp_manager,healthcare_management.group_doctor,dentist_management.group_dental_receptionist"
+              parent="dentist_management.root_main_menu_dentist" action="dentist_management.dentist_receptionist_action"
+              sequence="1"/>
+
+
+</odoo>

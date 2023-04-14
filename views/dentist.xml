@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="dentist_form_view" model="ir.ui.view">
+        <field name="name">dentist.form.view</field>
+        <field name="model">dentist</field>
+        <field name="arch" type="xml">
+            <form create="0">
+                <header>
+                    <button name="action_checkup_done" string="Checkup Done" type="object" class="oe_highlight"
+                            attrs="{'invisible':[('state', '=', 'checked')]}"/>
+                    <field name="state" widget="statusbar" statusbar_visible="confirm,checked"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="appointments_id" string="Appointment"
+                                   domain="[('speciality_id', '=', 'Dentist')]"
+                                   readonly="1"/>
+                            <field name="patient_name" string="Patient Name"/>
+                            <field name="validity_status" string="Status"/>
+                        </group>
+                        <group>
+                            <field name="appointment_date" string="Appointment Date"/>
+                            <field name="patient_status" string="Patient Status"/>
+                        </group>
+                        <br/>
+                        <group>
+                            <field name="dental_chair" string="Dental Chair" readonly="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page name="prescription" string="Prescription">
+                            <field name="prescription"/>
+                        </page>
+                        <page name="lab_test" string="Lab Tests">
+                            <field name="lab_tests"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="dentist_tree_view" model="ir.ui.view">
+        <field name="name">dentist.tree.view</field>
+        <field name="model">dentist</field>
+        <field name="arch" type="xml">
+            <tree create="0">
+                <field name="appointments_id"/>
+                <field name="patient_name"/>
+                <field name="patient_status"/>
+                <field name="appointment_date"/>
+                <field name="validity_status"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="dentist_action" model="ir.actions.act_window">
+        <field name="name">Dentist</field>
+        <field name="res_model">dentist</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="dentist_sub_menu"
+              name="Dentist"
+              parent="dentist_management.root_main_menu_dentist" action="dentist_management.dentist_action"
+              sequence="2"/>
+</odoo>

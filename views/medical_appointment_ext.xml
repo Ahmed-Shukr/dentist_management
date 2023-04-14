@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="dentist_management.medical_appointment_ext_form_view" model="ir.ui.view">
+            <field name="name">dentist_management.medical_appointment_ext_form_view</field>
+            <field name="model">medical.appointment</field>
+            <field name="inherit_id" ref="healthcare_management.medical_appointment_form_view"/>
+            <field name="arch" type="xml">
+                <field name="patient_code" position="after">
+                    <field name="is_service_dentist" string="flag test" invisible="1"/>
+                </field>
+                <xpath expr="//page[@name='gyneco']" position="attributes">
+                    <attribute name="attrs">{'invisible': [('is_service_dentist', '=',True)]}</attribute>
+                </xpath>
+
+                <xpath expr="//page[@name='diagnosis']" position="attributes">
+                    <attribute name="attrs">{'invisible': [('is_service_dentist', '=',True)]}</attribute>
+                </xpath>
+
+                <xpath expr="//page[@name='medication']" position="attributes">
+                    <attribute name="attrs">{'invisible': [('is_service_dentist', '=',True)]}</attribute>
+                </xpath>
+
+                <xpath expr="//page[@name='surgeries']" position="attributes">
+                    <attribute name="attrs">{'invisible': ['|','|', ('invoices_state','not in', ['appointment_start',
+                        'done']), ('need_surgery', '=', False),('is_service_dentist', '=',True)]}
+                    </attribute>
+                </xpath>
+                <xpath expr="//page[@name='prescription_orders']" position="attributes">
+                    <attribute name="attrs">{'invisible': [('is_service_dentist', '=',True)]}</attribute>
+                </xpath>
+                <xpath expr="//page[@name='imaging']" position="attributes">
+                    <attribute name="attrs">{'invisible': ['|','|', ('invoices_state','not in', ['appointment_start',
+                        'done']), ('need_imaging', '=', False),('is_service_dentist', '=',True)]}
+                    </attribute>
+                </xpath>
+                <xpath expr="//page[@name='upload_documents']" position="attributes">
+                    <attribute name="attrs">{'invisible': [('is_service_dentist', '=',True)]}</attribute>
+                </xpath>
+
+                <field name="need_surgery" position="attributes">
+                    <attribute name="attrs">{'invisible': ['|',('invoices_state','not in', ['appointment_start',
+                        'done']),('is_service_dentist', '=',True)], 'readonly': ['|', ('invoices_state','=', 'done'),
+                        ('create_inv_btn_visibility', '=', True)]}
+                    </attribute>
+                </field>
+                <field name="need_imaging" position="attributes">
+                    <attribute name="attrs">{'invisible': ['|',('invoices_state','not in', ['appointment_start',
+                        'done']),('is_service_dentist', '=',True)], 'readonly': ['|', ('invoices_state','=', 'done'),
+                        ('create_inv_btn_visibility', '=',
+                        True)]}
+                    </attribute>
+                </field>
+                <xpath expr="//notebook/page[1]" position="after">
+                    <page name="dental_services" string="Dental Services"
+                          attrs="{'invisible':[('is_service_dentist', '=',False)]}">
+                        <field name="dental_services_ids" string="Dental Services">
+                            <tree editable="bottom">
+                                <field name="services_id" string="Medical Services"
+                                       domain="[('medical_product_type', '=', 'dentist'), ('categ_id.name', '=', 'Dentist')]"/>
+                                <field name="service_cost" string="Service Charges" invisible="1"/>
+                            </tree>
+                        </field>
+                    </page>
+
+                    <page name="dental_measurement" string="Measurements"
+                          attrs="{'invisible':[('is_service_dentist', '=',False)]}">
+                        <field name="is_service_dentist" string="flag test" invisible="1"/>
+                        <field name="dental_measurement_ids" string="Measurement">
+                            <tree>
+                                <field name="patient_id" readonly="1" force_save="1"/>
+                                <field name="patient_name" readonly="1" force_save="1"/>
+                                <field name="start_date" readonly="1"/>
+                                <field name="insertion_date"/>
+                                <field name="patient_contact" string="Contact info"/>
+                                <field
+                                        name="selection_jaw"
+                                        string="Select Jaw" invisible="1"/>
+
+                                <field
+                                        name="measure_data_ids" widget="many2many_tags"
+                                        options="{'no_edit': True, 'no_create': True, 'no_open': True}"
+                                        string="Select Tooth"
+                                />
+                                <field name="cost" string="Cost" groups="dentist_management.group_dental_receptionist"/>
+                            </tree>
+                        </field>
+                    </page>
+
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
