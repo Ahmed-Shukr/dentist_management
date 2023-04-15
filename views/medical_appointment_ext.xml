@@ -30,8 +30,7 @@
                     <attribute name="attrs">{'invisible': [('is_service_dentist', '=',True)]}</attribute>
                 </xpath>
                 <xpath expr="//page[@name='imaging']" position="attributes">
-                    <attribute name="attrs">{'invisible': ['|','|', ('invoices_state','not in', ['appointment_start',
-                        'done']), ('need_imaging', '=', False),('is_service_dentist', '=',True)]}
+                    <attribute name="attrs">{'invisible': [('is_service_dentist', '=',True)]}
                     </attribute>
                 </xpath>
                 <xpath expr="//page[@name='upload_documents']" position="attributes">
