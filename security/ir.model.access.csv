@@ -9,7 +9,6 @@ acl_dental_services_lines,dental.services.lines,model_dental_services_lines,,1,1
 acl_dental_measurement_lines,dental.measurement.lines,model_dental_measurement_lines,,1,1,1,1
 
 acl_dental_measure_data,dental.measure.data,model_dental_measure_data,,1,1,1,1
-acl_dental_jaw_data,dental.jaw.data,model_dental_jaw_data,,1,1,1,1
 acl_installments_payment,installments.payment,model_installments_payment,,1,1,1,1
 
 access_medical_speciality_dentist_recep,medical.group.speciality.dentist.recep,healthcare_management.model_medical_speciality,dentist_management.group_dental_receptionist,1,1,1,1

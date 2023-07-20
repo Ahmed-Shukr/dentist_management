@@ -3,6 +3,7 @@
     <data>
         <record id="group_dental_receptionist" model="res.groups">
             <field name="name">Dental Receptionist</field>
+            <field name="implied_ids" eval="[(4, ref('healthcare_management.group_medical_group'))]"/>
         </record>
     </data>
 </odoo>

@@ -1,4 +1,4 @@
-from odoo import fields, models, api, _
+from odoo import fields, models, api
 from datetime import date
 from odoo.exceptions import UserError
 
@@ -30,27 +30,10 @@ class DentistReceptionist(models.Model):
     single_payment = fields.Boolean()
     installments_payment = fields.Boolean()
     account_move_id = fields.Many2one('account.move')
-    display_smart = fields.Boolean(default=False)
+    display_smart = fields.Boolean()
     installment_check = fields.Boolean()
     appointment_state = fields.Boolean(compute='_appointment_state_check')
     invoices_count = fields.Integer(string='Invoices', compute="_count_invoices")
-
-    is_appointment_started = fields.Boolean(compute='_is_appointment_started')
-    is_dental_services = fields.Boolean(compute='_is_dental_services')
-
-    # flag is for create invoice to be visible only if the appointment has started
-    def _is_appointment_started(self):
-        if self.appointments_id.invoices_state == 'appointment_start':
-            self.is_appointment_started = True
-        else:
-            self.is_appointment_started = False
-
-    # flag is for create invoice to be visible only if the dental services are mentioned in his/her appointment
-    def _is_dental_services(self):
-        if self.appointments_id.dental_services_ids:
-            self.is_dental_services = True
-        else:
-            self.is_dental_services = False
 
     # method for confirm button
     def action_confirm_apt(self):
@@ -71,8 +54,7 @@ class DentistReceptionist(models.Model):
             'type': 'ir.actions.act_window',
             'name': 'Dentist Appointment',
             'res_model': 'medical.appointment',
-            'view_mode': 'form',
-            'res_id': self.appointments_id.id,
+            'view_mode': 'list',
             # 'views': [[tree_id, 'list'], [form_id, 'form']],
             'domain': [('id', '=', self.appointments_id.id)]
         }
@@ -115,7 +97,6 @@ class DentistReceptionist(models.Model):
             if res.id:
                 self.display_smart = True
             res.write({'state': 'posted'})
-            self.state = 'unpaid'
 
     """
     **==========================================================================**
@@ -176,48 +157,3 @@ class DentistReceptionist(models.Model):
             self.appointment_state = True
         else:
             self.appointment_state = False
-
-    def create_paid_invoice(self):
-        account_invoice_obj = self.env['account.move']
-        sale_journals = self.env['account.journal'].search([('type', '=', 'sale')])
-        invoice_vals = {
-            'invoice_origin': '',
-            'move_type': 'out_invoice',
-            'ref': False,
-            'journal_id': sale_journals and sale_journals[0].id or False,
-            'partner_id': self.appointments_id.patient_id.patient_id.id,
-            'partner_shipping_id': self.appointments_id.patient_id.id or False,
-            'invoice_payment_term_id': False,
-            'team_id': False,
-            'invoice_date': date.today(),
-            'company_id': self.appointments_id.patient_id.company_id.id or False,
-            'inpatient_registration_id': self.inpatient_registration_id if self.patient_status == "inpatient" else False,
-            'ambulatory_care_id': self.ambulatory_care_id if self.patient_status == "ambulatory" else False,
-            'medical_invoice_type': "services",
-            'patient_id': self.appointments_id.patient_id.name,
-            'patient_name': self.patient_name,
-        }
-        res = account_invoice_obj.create(invoice_vals)
-        product = []
-        for rec in self.appointments_id.dental_services_ids:
-            if rec:
-                product.append(
-                    (0, 0, {'product_id': rec.services_id.product_variant_id.id, 'price_unit': rec.service_cost}))
-        res.write({'invoice_line_ids': product})
-        self.account_move_id = res.id
-        if res.id:
-            self.display_smart = True
-        res.action_post()
-        return {
-            'name': _('Register Payment'),
-            'res_model': 'account.payment.register',
-            'view_mode': 'form',
-            'context': {
-                'active_model': 'account.move',
-                'active_ids': res.ids,
-                'active_id': res.id,
-                'dont_redirect_to_payments': True,
-            },
-            'target': 'new',
-            'type': 'ir.actions.act_window',
-        }

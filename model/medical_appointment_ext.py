@@ -46,7 +46,6 @@ class DentalMeasurementLines(models.Model):
 
     # relation with data model
     measure_data_ids = fields.Many2many('dental.measure.data')
-    jaw_data_ids = fields.Many2many('dental.jaw.data')
     patient_id = fields.Many2one('medical.patient', 'Patient')
     patient_name = fields.Char()
     start_date = fields.Date('Start Date', default=fields.Date.context_today)
@@ -60,48 +59,14 @@ class DentalMeasurementLines(models.Model):
     # inverse name
     dental_measurement_id = fields.Many2one('medical.appointment')
 
-    # this method takes mesasurements and shift state to done state and if all measurements are taken, appointment on
-    # dentist receptionist will also be shifted to checked state
-    def done_measurement(self):
-        self.state = 'done'
-        mesaurements_states = []
-        for rec in self.dental_measurement_id.dental_measurement_ids:
-            if rec.state == 'done':
-                mesaurements_states.append(True)
-            else:
-                mesaurements_states.append(False)
-        if all(mesaurements_states):
-            self.env['dentist.receptionist'].search(
-                [('appointments_id', '=', self.dental_measurement_id.id)]).state = 'checked'
-
     # decorator/method for value return according to jaw selected
-    # @api.onchange('selection_jaw')
-    # def which_select_teeth(self):
-    #     if self.selection_jaw:
-    #         self.write({"measure_data_ids": False})
-    #         return {
-    #             'domain': {
-    #                 'measure_data_ids': [('selection_jaw', '=', self.selection_jaw)]
-    #             }
-    #         }
-
-    @api.onchange('jaw_data_ids')
-    def select_tooth(self):
-        jaws = []
-        if self.jaw_data_ids:
-            for rec in self.jaw_data_ids:
-                if rec.name == 'Upper Right Jaw':
-                    jaws.append("urj")
-                elif rec.name == 'Upper Left Jaw':
-                    jaws.append("ulj")
-                elif rec.name == 'Lower Right Jaw':
-                    jaws.append("lrj")
-                elif rec.name == 'Lower Left Jaw':
-                    jaws.append("llj")
+    @api.onchange('selection_jaw')
+    def which_select_teeth(self):
+        if self.selection_jaw:
             self.write({"measure_data_ids": False})
             return {
                 'domain': {
-                    'measure_data_ids': [('selection_jaw', 'in', jaws)]
+                    'measure_data_ids': [('selection_jaw', '=', self.selection_jaw)]
                 }
             }
 
@@ -120,10 +85,3 @@ class DentalMeasurementData(models.Model):
     name = fields.Char()
     selection_jaw = fields.Selection(
         [('urj', 'Upper Right Jaw'), ('lrj', 'Lower Right Jaw'), ('ulj', 'Upper Left Jaw'), ('llj', 'Lower Left Jaw')])
-
-
-class DentalJawData(models.Model):
-    _name = 'dental.jaw.data'
-    _description = 'Dental Jaw Data'
-
-    name = fields.Char()

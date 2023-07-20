@@ -169,31 +169,13 @@
             <field name="selection_jaw">llj</field>
         </record>
 
-        <!--Jaw Data-->
-
-        <record id="urj_data" model="dental.jaw.data">
-            <field name="name">Upper Right Jaw</field>
-        </record>
-
-        <record id="ulj_data" model="dental.jaw.data">
-            <field name="name">Upper Left Jaw</field>
-        </record>
-
-        <record id="lrj_data" model="dental.jaw.data">
-            <field name="name">Lower Right Jaw</field>
-        </record>
-
-        <record id="llj_data" model="dental.jaw.data">
-            <field name="name">Lower Left Jaw</field>
-        </record>
-
         <!--===========================================================================-->
 
-<!--        <record id="teeth_data_product" model="product.template">-->
-<!--            <field name="name">Teeth</field>-->
-<!--            <field name="medical_product_type">dentist</field>-->
-<!--            <field name="detailed_type">product</field>-->
-<!--            <field name="categ_id" ref="dentist_management.dentist_product_category"/>-->
-<!--        </record>-->
+        <record id="teeth_data_product" model="product.template">
+          <field name="name">Teeth</field>
+          <field name="medical_product_type">dentist</field>
+          <field name="detailed_type">product</field>
+          <field name="categ_id" ref="dentist_management.dentist_product_category"/>
+        </record>
     </data>
 </odoo>

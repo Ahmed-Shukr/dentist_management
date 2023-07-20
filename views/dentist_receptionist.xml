@@ -8,21 +8,14 @@
             <form>
                 <header>
                     <button name="action_confirm_apt" string="Confirm" type="object" class="oe_highlight"
-                            attrs="{'invisible':[('state', '!=', 'new')]}"/>
+                            attrs="{'invisible':[('state', 'in', ['confirm', 'checked'])]}"/>
                     <field name="state" widget="statusbar" statusbar_visible="new,confirm,unpaid,paid,checked"/>
 
                     <button
                             name="create_invoice"
                             string="Create Invoice" type="object" class="oe_highlight"
                             groups="dentist_management.group_dental_receptionist"
-                            attrs="{'invisible': ['|', '|',('is_appointment_started', '!=', True), ('is_dental_services', '!=', True),('state', '!=', 'confirm')]}"
-                    />
-
-                    <button name="create_paid_invoice" string="Register Payment" type="object" class="oe_highlight"
-                            groups="dentist_management.group_dental_receptionist"
-                            attrs="{'invisible': ['|', '|',('is_appointment_started', '!=', True), ('is_dental_services', '!=', True), ('state', 'not in', ['confirm', 'unpaid'])]}"
-                    />
-
+                            attrs="{'invisible': ['|', ('single_payment', '=', False), ('display_smart', '!=', False)]}"/>
                     <button
                             name="%(dentist_management.action_installments_payment_wizard_view)d"
                             string="Installments" type="action" class="oe_highlight"
@@ -51,7 +44,7 @@
                         <group>
                             <group>
                                 <field name="appointments_id" string="Appointment"
-                                       domain="[('speciality_id.speciality_service_id.name', '=', 'Dentist'), ('invoices_state', 'in', ['paid', 'pay_later', 'appointment_start'])]"
+                                       domain="[('speciality_id.speciality_service_id.name', '=', 'Dentist'), ('invoices_state', '=', 'paid')]"
                                        options="{'no_create':1,'no_create_edit':1}"/>
                                 <field name="patient_name" string="Patient Name"/>
                                 <field name="validity_status" string="Status"/>
@@ -66,8 +59,6 @@
                                 <field name="display_smart" invisible="1"/>
                                 <field name="installment_check" invisible="1"/>
                                 <field name="appointment_state" invisible="1"/>
-                                <field name="is_appointment_started" invisible="1"/>
-                                <field name="is_dental_services" invisible="1"/>
                             </group>
                             <br/>
                             <group>
@@ -123,12 +114,10 @@
     <menuitem id="dentist_management.root_main_menu_dentist"
               name="Dentist"
               parent="healthcare_management.main_menu_healthcare_management"
-              sequence="10"
-              groups="base.group_erp_manager,healthcare_management.group_doctor,dentist_management.group_dental_receptionist"/>
+              sequence="10" groups="base.group_erp_manager,healthcare_management.group_doctor,dentist_management.group_dental_receptionist"/>
 
 
-    <menuitem id="dentist_management.dentist_receptionist_menu" name="Dentist Receptionist"
-              groups="base.group_erp_manager,healthcare_management.group_doctor,dentist_management.group_dental_receptionist"
+    <menuitem id="dentist_management.dentist_receptionist_menu" name="Dentist Receptionist" groups="base.group_erp_manager,healthcare_management.group_doctor,dentist_management.group_dental_receptionist"
               parent="dentist_management.root_main_menu_dentist" action="dentist_management.dentist_receptionist_action"
               sequence="1"/>
 

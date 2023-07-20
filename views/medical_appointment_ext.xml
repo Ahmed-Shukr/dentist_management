@@ -9,43 +9,40 @@
                 <field name="patient_code" position="after">
                     <field name="is_service_dentist" string="flag test" invisible="1"/>
                 </field>
+                <xpath expr="//page[@name='nurse_assessments']" position="attributes">
+                    <attribute name="attrs">{'invisible': [('is_service_dentist', '=',True)]}</attribute>
+                </xpath>
+                <xpath expr="//page[@name='historic_diseases']" position="attributes">
+                    <attribute name="attrs">{'invisible': [('is_service_dentist', '=',True)]}</attribute>
+                </xpath>
+                <xpath expr="//page[@name='evaluations']" position="attributes">
+                    <attribute name="attrs">{'invisible': [('is_service_dentist', '=',True)]}</attribute>
+                </xpath>
+
                 <xpath expr="//page[@name='gyneco']" position="attributes">
-                    <attribute name="attrs">{'invisible': ['|', ('invoices_state','not in', ('appointment_start',
-                        'done')), ('is_service_dentist', '=',True)]}
-                    </attribute>
+                    <attribute name="attrs">{'invisible': [('is_service_dentist', '=',True)]}</attribute>
                 </xpath>
-
                 <xpath expr="//page[@name='diagnosis']" position="attributes">
-                    <attribute name="attrs">{'invisible': ['|', ('invoices_state','not in', ('appointment_start',
-                        'done')), ('is_service_dentist', '=',True)]}
-                    </attribute>
+                    <attribute name="attrs">{'invisible': [('is_service_dentist', '=',True)]}</attribute>
                 </xpath>
-
                 <xpath expr="//page[@name='medication']" position="attributes">
-                    <attribute name="attrs">{'invisible': ['|', ('invoices_state','not in', ('appointment_start',
-                        'done')), ('is_service_dentist', '=',True)]}
-                    </attribute>
+                    <attribute name="attrs">{'invisible': [('is_service_dentist', '=',True)]}</attribute>
                 </xpath>
-
                 <xpath expr="//page[@name='surgeries']" position="attributes">
                     <attribute name="attrs">{'invisible': ['|','|', ('invoices_state','not in', ['appointment_start',
                         'done']), ('need_surgery', '=', False),('is_service_dentist', '=',True)]}
                     </attribute>
                 </xpath>
                 <xpath expr="//page[@name='prescription_orders']" position="attributes">
-                    <attribute name="attrs">{'invisible': ['|', ('invoices_state','not in', ('appointment_start',
-                        'done')), ('is_service_dentist', '=',True)]}
-                    </attribute>
+                    <attribute name="attrs">{'invisible': [('is_service_dentist', '=',True)]}</attribute>
                 </xpath>
                 <xpath expr="//page[@name='imaging']" position="attributes">
-                    <attribute name="attrs">{'invisible': ['|', ('invoices_state','not in', ('appointment_start',
-                        'done')), ('is_service_dentist', '=',True)]}
+                    <attribute name="attrs">{'invisible': ['|','|', ('invoices_state','not in', ['appointment_start',
+                        'done']), ('need_imaging', '=', False),('is_service_dentist', '=',True)]}
                     </attribute>
                 </xpath>
                 <xpath expr="//page[@name='upload_documents']" position="attributes">
-                    <attribute name="attrs">{'invisible': ['|', ('invoices_state','not in', ('appointment_start',
-                        'done')), ('is_service_dentist', '=',True)]}
-                    </attribute>
+                    <attribute name="attrs">{'invisible': [('is_service_dentist', '=',True)]}</attribute>
                 </xpath>
 
                 <field name="need_surgery" position="attributes">
